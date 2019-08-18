@@ -1,5 +1,5 @@
 import { extname } from 'path';
-import { getSupportInfo } from 'prettier';
+import { getSupportInfo } from '@cyph/prettier';
 
 const extensions = getSupportInfo().languages.reduce(
   (prev, language) => prev.concat(language.extensions || []),

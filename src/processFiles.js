@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync } from 'fs';
-import * as prettier from 'prettier';
+import * as prettier from '@cyph/prettier';
 import { join } from 'path';
 
 export default (
