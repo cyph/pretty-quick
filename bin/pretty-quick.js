@@ -5,7 +5,7 @@
 const chalk = require('chalk');
 const mri = require('mri');
 
-const prettyQuick = require('..').default;
+const prettyQuick = require('@cyph/pretty-quick').default;
 
 const args = mri(process.argv.slice(2));
 
@@ -50,7 +50,8 @@ const prettyQuickResult = prettyQuick(
 
 if (prettyQuickResult.success) {
   console.log('✅  Everything is awesome!');
-} else {
+}
+else {
   if (prettyQuickResult.errors.indexOf('PARTIALLY_STAGED_FILE') !== -1) {
     console.log(
       '✗ Partially staged files were fixed up.' +
