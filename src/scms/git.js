@@ -5,7 +5,10 @@ import { dirname } from 'path';
 export const name = 'git';
 
 export const detect = directory => {
-  const gitDirectory = findUp.sync('.git', { cwd: directory });
+  const gitDirectory = findUp.sync('.git', {
+    cwd: directory,
+    type: 'directory',
+  });
   if (gitDirectory) {
     return dirname(gitDirectory);
   }
@@ -50,13 +53,13 @@ export const getChangedFiles = (directory, revision, staged) => {
           staged ? '--cached' : null,
           '--diff-filter=ACMRTUB',
           revision,
-        ].filter(Boolean)
-      )
+        ].filter(Boolean),
+      ),
     ),
     ...(staged
       ? []
       : getLines(
-          runGit(directory, ['ls-files', '--others', '--exclude-standard'])
+          runGit(directory, ['ls-files', '--others', '--exclude-standard']),
         )),
   ].filter(Boolean);
 };

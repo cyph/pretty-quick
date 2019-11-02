@@ -5,7 +5,10 @@ import { dirname } from 'path';
 export const name = 'hg';
 
 export const detect = directory => {
-  const hgDirectory = findUp.sync('.hg', { cwd: directory });
+  const hgDirectory = findUp.sync('.hg', {
+    cwd: directory,
+    type: 'directory',
+  });
   if (hgDirectory) {
     return dirname(hgDirectory);
   }
@@ -30,7 +33,7 @@ export const getSinceRevision = (directory, { branch }) => {
 export const getChangedFiles = (directory, revision) => {
   return [
     ...getLines(
-      runHg(directory, ['status', '-n', '-a', '-m', '--rev', revision])
+      runHg(directory, ['status', '-n', '-a', '-m', '--rev', revision]),
     ),
   ].filter(Boolean);
 };
