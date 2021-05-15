@@ -15,6 +15,7 @@ export default (
     branch,
     bail,
     check,
+    ignorePath,
     verbose,
     onFoundSinceRevision,
     onFoundChangedFiles,
@@ -22,6 +23,7 @@ export default (
     onExamineFile,
     onCheckFile,
     onWriteFile,
+    resolveConfig = true,
   } = {},
 ) => {
   const scm = scms(currentDirectory);
@@ -34,15 +36,15 @@ export default (
 
   onFoundSinceRevision && onFoundSinceRevision(scm.name, revision);
 
-  const rootIgnorer = createIgnorer(directory);
+  const rootIgnorer = createIgnorer(directory, ignorePath);
   const cwdIgnorer =
     currentDirectory !== directory
-      ? createIgnorer(currentDirectory)
+      ? createIgnorer(currentDirectory, ignorePath)
       : () => true;
 
   const changedFiles = scm
     .getChangedFiles(directory, revision, staged)
-    .filter(isSupportedExtension)
+    .filter(isSupportedExtension(resolveConfig))
     .filter(createMatcher(pattern))
     .filter(rootIgnorer)
     .filter(cwdIgnorer);
@@ -56,7 +58,7 @@ export default (
         .filter(cwdIgnorer)
     : [];
 
-  const wasFullyStaged = f => unstagedFiles.indexOf(f) < 0;
+  const wasFullyStaged = (f) => unstagedFiles.indexOf(f) < 0;
 
   onFoundChangedFiles && onFoundChangedFiles(changedFiles);
 
@@ -65,7 +67,7 @@ export default (
   processFiles(directory, changedFiles, {
     check,
     config,
-    onWriteFile: file => {
+    onWriteFile: (file) => {
       onWriteFile && onWriteFile(file);
       if (bail) {
         failReasons.add('BAIL_ON_WRITE');

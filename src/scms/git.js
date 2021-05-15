@@ -1,10 +1,15 @@
 import findUp from 'find-up';
 import execa from 'execa';
-import { dirname } from 'path';
+import { dirname, join } from 'path';
+import * as fs from 'fs';
 
 export const name = 'git';
 
-export const detect = directory => {
+export const detect = (directory) => {
+  if (fs.existsSync(join(directory, '.git'))) {
+    return directory;
+  }
+
   const gitDirectory = findUp.sync('.git', {
     cwd: directory,
     type: 'directory',
@@ -19,7 +24,7 @@ const runGit = (directory, args) =>
     cwd: directory,
   });
 
-const getLines = execaResult => execaResult.stdout.split('\n');
+const getLines = (execaResult) => execaResult.stdout.split('\n');
 
 export const getSinceRevision = (directory, { staged, branch }) => {
   try {
@@ -64,7 +69,7 @@ export const getChangedFiles = (directory, revision, staged) => {
   ].filter(Boolean);
 };
 
-export const getUnstagedChangedFiles = directory => {
+export const getUnstagedChangedFiles = (directory) => {
   return getChangedFiles(directory, null, false);
 };
 

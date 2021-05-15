@@ -6,18 +6,24 @@ cache:
 notifications:
   email: false
 node_js:
-  - '12'
-  - '10'
-  - '8'
+  - 10.13
+  - 12
+  - 14
+  - node
 install:
   - yarn
 script:
   - yarn lint
   - yarn build
   - yarn test
-after_success:
-  - npm install -g semantic-release@11 travis-deploy-once@4
-  - travis-deploy-once "yarn semantic-release"
+deploy:
+  provider: script
+  skip_cleanup: true
+  script:
+    - npx semantic-release@15
+  on:
+    branch: master
+    node_js: '14'
 branches:
   except:
     - /^v\d+\.\d+\.\d+$/

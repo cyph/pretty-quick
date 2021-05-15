@@ -1,9 +1,4 @@
-import { extname } from 'path';
-import { getSupportInfo } from '@cyph/prettier';
+import { getFileInfo } from '@cyph/prettier';
 
-const extensions = getSupportInfo().languages.reduce(
-  (prev, language) => prev.concat(language.extensions || []),
-  [],
-);
-
-export default file => extensions.includes(extname(file));
+export default (resolveConfig) => (file) =>
+  Boolean(getFileInfo.sync(file, { resolveConfig }).inferredParser);
