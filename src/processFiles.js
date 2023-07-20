@@ -26,11 +26,16 @@ export default async (
       continue;
     }
 
-    const output = await prettier.format(input, options);
+    try {
+      const output = await prettier.format(input, options);
 
-    if (output !== input) {
-      writeFileSync(file, output);
-      onWriteFile && onWriteFile(relative);
+      if (output !== input) {
+        writeFileSync(file, output);
+        onWriteFile && onWriteFile(relative);
+      }
+    }
+    catch (err) {
+      console.warn(err.message);
     }
   }
 };
