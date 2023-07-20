@@ -21,12 +21,12 @@ export default async (
     const input = readFileSync(file, 'utf8');
 
     if (check) {
-      const isFormatted = prettier.check(input, options);
+      const isFormatted = await prettier.check(input, options);
       onCheckFile && onCheckFile(relative, isFormatted);
       continue;
     }
 
-    const output = prettier.format(input, options);
+    const output = await prettier.format(input, options);
 
     if (output !== input) {
       writeFileSync(file, output);
